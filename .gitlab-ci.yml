@@ -1,0 +1,70 @@
+stages:
+  - build
+  - deploy
+
+reading:build:
+  only:
+    - dev
+    - master
+  stage: build
+  before_script:
+    - echo "pre-build start $PWD, user:`whoami`"
+    - export GOPROXY=https://goproxy.cn
+  script:
+    - echo "build start $PWD, user:`whoami`"
+    - scripts/build.sh
+  after_script:
+  tags:
+    - reading
+
+reading:build:manual:
+  only:
+    - dev
+    - master
+  stage: build
+  before_script:
+    - echo "pre-build start $PWD, user:`whoami`"
+    - export GOPROXY=https://goproxy.cn
+  script:
+    - echo "build start $PWD, user:`whoami`"
+    - scripts/build.sh
+  after_script:
+  tags:
+    - reading
+  when: manual
+
+
+reading:deploy:
+  only:
+    - dev
+    - master
+  stage: deploy
+  script:
+    - echo "build start $PWD, user:`whoami`"
+    - scripts/deploy.sh dev
+  tags:
+    - reading
+
+reading:deploy:manual:
+  only:
+    - dev
+    - master
+  stage: deploy
+  script:
+    - echo "build start $PWD, user:`whoami`"
+    - scripts/deploy.sh dev
+  tags:
+    - reading
+  when: manual
+
+reading:deploy:rollback:
+  only:
+    - dev
+    - master
+  stage: deploy
+  script:
+    - echo "roll back stage, user:`whoami`"
+    - scripts/rollback.sh dev
+  tags:
+    - reading
+  when: manual
